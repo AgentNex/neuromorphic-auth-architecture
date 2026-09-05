@@ -1,0 +1,292 @@
+{
+  "meta": {
+    "name": "High-Performance Neuromorphic Auth Architecture",
+    "description": "Tactile 2.5D dual-light source design system with accessible contrast, zero-latency dark mode, and GSAP micro-interactions for InsForge authentication.",
+    "source_references": [
+      "auth_neouromorphic_ui_prompt.md",
+      "agent/skills/design-dna"
+    ],
+    "created_at": "2026-09-05T06:00:00Z"
+  },
+  "design_system": {
+    "color": {
+      "palette_type": "monochromatic-with-royal-accent",
+      "primary": {
+        "hex": "#6ea0f7",
+        "role": "Soft Royal Blue accent for focus rings, CTA gradients, active indicators"
+      },
+      "secondary": {
+        "hex": "#94a3b8",
+        "role": "Muted text and secondary icons"
+      },
+      "accent": {
+        "hex": "#6ea0f7",
+        "role": "Primary brand focus and glow highlight"
+      },
+      "neutral": {
+        "scale": {
+          "light_bg": "#f0f4f8",
+          "light_highlight": "#ffffff",
+          "light_shadow": "#d1d9e6",
+          "light_text_primary": "#1e293b",
+          "light_text_muted": "#64748b",
+          "dark_bg": "#1f1f2e",
+          "dark_highlight": "#29293d",
+          "dark_shadow": "#15151f",
+          "dark_text_primary": "#f8fafc",
+          "dark_text_muted": "#94a3b8"
+        },
+        "usage": "Dual-mode background with physical dual light source at 135deg"
+      },
+      "semantic": {
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "error": "#ef4444",
+        "info": "#6ea0f7"
+      },
+      "surface": {
+        "background": "Light: #f0f4f8, Dark: #1f1f2e",
+        "card": "Light: #f0f4f8, Dark: #1f1f2e",
+        "elevated": "Light: linear-gradient(145deg, #f8fcff, #e3e8ee), Dark: linear-gradient(145deg, #222233, #1c1c29)"
+      },
+      "contrast_strategy": "WCAG AA compliant (minimum 4.5:1). Dark slate text #1e293b on #f0f4f8 and bright slate #f8fafc on #1f1f2e"
+    },
+    "typography": {
+      "type_scale": {
+        "display": { "size": "2rem", "weight": "700", "line_height": "1.2", "tracking": "-0.025em" },
+        "heading_1": { "size": "1.5rem", "weight": "700", "line_height": "1.25", "tracking": "-0.02em" },
+        "heading_2": { "size": "1.25rem", "weight": "600", "line_height": "1.3", "tracking": "-0.015em" },
+        "heading_3": { "size": "1.125rem", "weight": "600", "line_height": "1.4", "tracking": "-0.01em" },
+        "body": { "size": "0.9375rem", "weight": "400", "line_height": "1.5", "tracking": "0em" },
+        "body_small": { "size": "0.875rem", "weight": "400", "line_height": "1.4", "tracking": "0em" },
+        "caption": { "size": "0.75rem", "weight": "500", "line_height": "1.3", "tracking": "0.01em" },
+        "overline": { "size": "0.6875rem", "weight": "600", "line_height": "1.2", "tracking": "0.05em" }
+      },
+      "font_families": {
+        "heading": "var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "body": "var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+      },
+      "font_style_notes": "Clean geometric sans with crisp letter spacing for tactile digital readability"
+    },
+    "spacing": {
+      "base_unit": "4px",
+      "scale": ["0", "4px", "8px", "12px", "16px", "20px", "24px", "32px", "40px", "48px"],
+      "content_density": "comfortable",
+      "section_rhythm": "Consistent 20px gap inside card, 32px padding on container"
+    },
+    "layout": {
+      "grid_system": "flex-centered",
+      "max_content_width": "28rem",
+      "columns": 1,
+      "gutter": "1rem",
+      "breakpoints": { "sm": "640px", "md": "768px", "lg": "1024px" },
+      "alignment_tendency": "centered"
+    },
+    "shape": {
+      "border_radius": {
+        "small": "8px",
+        "medium": "14px",
+        "large": "24px",
+        "pill": "9999px"
+      },
+      "border_usage": "none to 1px subtle matching base highlight; depth comes from directional shadows",
+      "divider_style": "1px inset shadow groove"
+    },
+    "elevation": {
+      "shadow_style": "dual-light-source-135deg",
+      "levels": {
+        "resting_card_light": "8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff",
+        "resting_card_dark": "8px 8px 18px #15151f, -8px -8px 18px #29293d",
+        "inset_light": "inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff",
+        "inset_dark": "inset 4px 4px 8px #15151f, inset -4px -4px 8px #29293d",
+        "inset_deep_light": "inset 6px 6px 10px #c2c9d6, inset -6px -6px 10px #ffffff",
+        "inset_deep_dark": "inset 6px 6px 10px #101018, inset -6px -6px 10px #2e2e44",
+        "pill_convex_light": "linear-gradient(145deg, #f8fcff, #e3e8ee)",
+        "pill_convex_dark": "linear-gradient(145deg, #222233, #1c1c29)",
+        "accent_focus_ring": "0 0 0 2px #6ea0f7, 0 0 12px rgba(110, 160, 247, 0.4)"
+      },
+      "depth_cues": "Dual shadows simulating top-left light source at 135deg with soft blur falloff"
+    },
+    "iconography": {
+      "style": "feather-light-stroke",
+      "stroke_weight": "1.75px",
+      "size_scale": ["16px", "18px", "20px", "24px"],
+      "preferred_set": "lucide-react"
+    },
+    "motion": {
+      "easing": "back.out(1.7) for tactile bounce; power2.out for parallax slips",
+      "duration_scale": {
+        "micro": "120ms",
+        "normal": "380ms",
+        "macro": "600ms"
+      },
+      "entrance_pattern": "horizontal parallax slip with xPercent: 15, opacity: 0 -> 1, filter: blur(4px -> 0px)",
+      "exit_pattern": "horizontal parallax slip with xPercent: -15, opacity: 1 -> 0, filter: blur(0px -> 4px)",
+      "philosophy": "Tactile physical response with zero CLS and instant GPU memory cleanup"
+    },
+    "components": {
+      "button_style": "Tactile convex pill with onPointerDown 0.97 scale and inset shadow depression",
+      "input_style": "Tactile inset well with deeper shadow on focus and soft royal blue focus ring",
+      "card_style": "Floating 2.5D resting card with dual 135deg light/shadow cast and rounded-3xl corners",
+      "navigation_pattern": "Tactile pill segmented control tab switcher with smooth sliding convex indicator",
+      "modal_style": "Floating tactile surface with soft perimeter shadow",
+      "list_style": "Inset well container with clean status items",
+      "component_notes": "All inputs include screen-reader labels, pure SVG icons, clear validation feedback"
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": ["tactile", "serene", "reassuring", "futuristic", "analog-warmth"],
+      "visual_metaphor": "Sculpted physical matte surface reacting to light",
+      "era_influence": "Modern Neo-Neuromorphism (2025-2026 ergonomic)",
+      "genre": "High-Performance Developer & Enterprise Authentication",
+      "personality_traits": ["refined", "trustworthy", "tactile", "meticulous"],
+      "adjectives": ["soft", "sculpted", "responsive", "precise", "accessible"]
+    },
+    "visual_language": {
+      "complexity": "minimal",
+      "ornamentation": "none (pure form through physical light physics)",
+      "whitespace_usage": "generous and balanced for zero clutter",
+      "visual_weight_distribution": "centered card with subtle ambient aura",
+      "focal_strategy": "clear single action focus with immediate tactile feedback",
+      "contrast_level": "accessible high contrast (WCAG AA compliant)",
+      "texture_usage": "smooth satin finish, physical 2.5D elevation"
+    },
+    "composition": {
+      "hierarchy_method": "spatial isolation and convex/concave depth planes",
+      "balance_type": "symmetric centered card with dynamic inline feedback",
+      "flow_direction": "vertical task flow with horizontal parallax view transitions",
+      "grouping_strategy": "contained field groupings with clear 12-16px gutters",
+      "negative_space_role": "creates calm focus, eliminating cognitive fatigue during login"
+    },
+    "imagery": {
+      "photo_treatment": "none (pure vector and SVG icons)",
+      "illustration_style": "minimal vector badge icons",
+      "graphic_elements": "dual shadows, convex pill buttons, smooth progress meters",
+      "pattern_usage": "none",
+      "image_shape": "rounded-full for avatar and badges"
+    },
+    "interaction_feel": {
+      "feedback_style": "physical tactile push (120ms to inset, spring back on release)",
+      "hover_behavior": "subtle elevation lift or smooth glow enhancement",
+      "transition_personality": "smooth horizontal parallax slips with motion blur",
+      "loading_style": "smooth spinning tactile circular ring",
+      "microinteraction_density": "high responsiveness on every interactive boundary"
+    },
+    "brand_voice_in_ui": {
+      "tone": "reassuring, clear, concise, and empowering",
+      "formality": "modern professional",
+      "cta_style": "direct imperative (e.g., 'Sign In to Antigravity', 'Create Your Account')",
+      "empty_state_approach": "clean prompt with tactile action button",
+      "error_tone": "constructive, specific, and actionable without blame"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "subtle-accent",
+      "performance_tier": "lightweight",
+      "fallback_strategy": "CSS transition fallback when prefers-reduced-motion is active",
+      "primary_technology": "GSAP + CSS box-shadow directional vectors"
+    },
+    "background_effects": {
+      "type": "ambient-radial-glow",
+      "description": "Subtle radial ambient illumination centered on card, shifting gently in dark/light mode",
+      "technology": "CSS radial-gradient",
+      "params": {
+        "color_palette": ["rgba(110, 160, 247, 0.12)", "transparent"],
+        "speed": "static",
+        "density": "subtle",
+        "opacity": 0.6,
+        "blend_mode": "normal"
+      }
+    },
+    "particle_systems": {
+      "enabled": false,
+      "type": "none",
+      "description": "Disabled to guarantee zero CLS and maximum RAM savings on mobile devices",
+      "technology": "none",
+      "params": {}
+    },
+    "3d_elements": {
+      "enabled": false,
+      "type": "none",
+      "description": "Simulated purely via 2.5D CSS dual box-shadows for 60fps performance",
+      "technology": "CSS 2.5D",
+      "params": {}
+    },
+    "shader_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Not needed for low-RAM mobile performance",
+      "technology": "none",
+      "params": {}
+    },
+    "scroll_effects": {
+      "parallax": {
+        "enabled": false,
+        "layers": 1,
+        "depth_range": "0",
+        "speed_curve": "linear"
+      },
+      "scroll_triggered_animations": {
+        "enabled": false,
+        "trigger_points": [],
+        "animation_type": "none",
+        "scrub_behavior": "none"
+      },
+      "scroll_morphing": {
+        "enabled": false,
+        "description": "none"
+      }
+    },
+    "text_effects": {
+      "type": "none",
+      "description": "Accessible crisp typography without CPU-draining text effects",
+      "technology": "CSS",
+      "params": {}
+    },
+    "cursor_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Default native cursor for accessibility and mobile compatibility",
+      "params": {}
+    },
+    "image_effects": {
+      "type": "none",
+      "description": "none",
+      "technology": "none",
+      "params": {}
+    },
+    "glassmorphism_neumorphism": {
+      "enabled": true,
+      "style": "neumorphic-dual-light",
+      "params": {
+        "blur_radius": "0px (pure physical shadows)",
+        "transparency": "opaque",
+        "border_treatment": "none or 1px subtle highlight",
+        "shadow_type": "dual-light directional",
+        "light_source_angle": "135deg"
+      }
+    },
+    "canvas_drawings": {
+      "enabled": false,
+      "type": "none",
+      "description": "Pure CSS geometry to maximize battery life on mobile",
+      "technology": "none",
+      "params": {}
+    },
+    "svg_animations": {
+      "enabled": true,
+      "type": "icon-spin-and-draw",
+      "description": "Smooth SVG spinner and animated checkmark for auth states",
+      "params": {
+        "animation_method": "CSS keyframes / GSAP",
+        "path_morphing": false,
+        "stroke_animation": true,
+        "filter_effects": false
+      }
+    },
+    "composite_notes": "Strict adherence to physical 135-degree dual lighting model. In light mode, highlights are pure white #ffffff and shadows are #d1d9e6 on #f0f4f8 base. In dark mode, highlights are #29293d and shadows are #15151f on #1f1f2e base. Micro-interactions utilize GSAP with gsap.context() lifecycle management ensuring zero RAM leaks on low-end mobile devices."
+  }
+}

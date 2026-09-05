@@ -1,65 +1,173 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import {
+  Shield,
+  Lock,
+  Sparkles,
+  Zap,
+  CheckCircle2,
+  ArrowRight,
+  SunMoon,
+  Layers,
+  Fingerprint,
+} from 'lucide-react';
+import { insforge } from '@/lib/insforge';
+import TactileButton from '@/components/ui/TactileButton';
+
+export default function HomePage() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    insforge.auth.getCurrentUser().then(({ data }) => {
+      if (data?.user) {
+        setCurrentUser(data.user);
+      }
+    });
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="relative min-h-[calc(100vh-80px)] w-full flex flex-col items-center justify-center px-4 sm:px-6 py-12">
+      {/* Background ambient glow */}
+      <div
+        className="pointer-events-none fixed inset-0 flex items-center justify-center -z-10"
+        aria-hidden="true"
+      >
+        <div
+          className="w-[600px] h-[600px] rounded-full blur-[120px] opacity-25 dark:opacity-20"
+          style={{
+            background:
+              'radial-gradient(circle, #6ea0f7 0%, rgba(110, 160, 247, 0) 70%)',
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+      </div>
+
+      <div className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-8">
+        {/* Badge */}
+        <div
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#6ea0f7]"
+          style={{
+            backgroundColor: 'var(--neuro-base)',
+            boxShadow: 'var(--neuro-inset)',
+          }}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Tactile 2.5D Neuromorphic Design DNA</span>
+        </div>
+
+        {/* Hero Title */}
+        <div className="space-y-4 max-w-2xl">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[var(--neuro-text-primary)] leading-[1.15]">
+            Next-Gen Auth With{' '}
+            <span className="text-[#6ea0f7] underline decoration-[#6ea0f7]/30 decoration-wavy">
+              Tactile Precision
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-sm sm:text-base text-[var(--neuro-text-muted)] leading-relaxed max-w-xl mx-auto">
+            An enterprise-grade, high-performance authentication architecture
+            featuring physical 135° dual-light shadows, GSAP micro-interactions,
+            zero-latency dark mode, and InsForge native BaaS integration.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto pt-2">
+          <Link href="/auth" className="w-full sm:w-auto">
+            <TactileButton variant="primary" className="px-8 py-4 text-base">
+              <span>{currentUser ? 'Open My Profile' : 'Launch Auth Suite'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </TactileButton>
+          </Link>
+
+          <Link href="/dashboard" className="w-full sm:w-auto">
+            <TactileButton variant="secondary" className="px-8 py-4 text-base">
+              <span>Explore Dashboard</span>
+            </TactileButton>
+          </Link>
         </div>
-      </main>
+
+        {/* 3-Dimensional Neuromorphic Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full pt-8 text-left">
+          {/* Feature 1 */}
+          <div
+            className="p-6 rounded-neuro-card space-y-3 transition-transform hover:-translate-y-1"
+            style={{
+              backgroundColor: 'var(--neuro-base)',
+              boxShadow: 'var(--neuro-flat)',
+            }}
+          >
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-[#6ea0f7]"
+              style={{
+                backgroundColor: 'var(--neuro-base)',
+                boxShadow: 'var(--neuro-inset)',
+              }}
+            >
+              <Layers className="w-5 h-5" />
+            </div>
+            <h2 className="text-base font-bold text-[var(--neuro-text-primary)]">
+              2.5D Dual-Light Surface
+            </h2>
+            <p className="text-xs text-[var(--neuro-text-muted)] leading-relaxed">
+              Directional 135° dual light simulation with white highlights and
+              soft diffuse shadows adhering strictly to WCAG AA contrast.
+            </p>
+          </div>
+
+          {/* Feature 2 */}
+          <div
+            className="p-6 rounded-neuro-card space-y-3 transition-transform hover:-translate-y-1"
+            style={{
+              backgroundColor: 'var(--neuro-base)',
+              boxShadow: 'var(--neuro-flat)',
+            }}
+          >
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-[#6ea0f7]"
+              style={{
+                backgroundColor: 'var(--neuro-base)',
+                boxShadow: 'var(--neuro-inset)',
+              }}
+            >
+              <Zap className="w-5 h-5" />
+            </div>
+            <h2 className="text-base font-bold text-[var(--neuro-text-primary)]">
+              GSAP Memory Safety
+            </h2>
+            <p className="text-xs text-[var(--neuro-text-muted)] leading-relaxed">
+              120ms tactile depressions, spring physics, and horizontal parallax
+              blur-slips wrapped in gsap.context() with zero RAM leaks.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div
+            className="p-6 rounded-neuro-card space-y-3 transition-transform hover:-translate-y-1"
+            style={{
+              backgroundColor: 'var(--neuro-base)',
+              boxShadow: 'var(--neuro-flat)',
+            }}
+          >
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-[#6ea0f7]"
+              style={{
+                backgroundColor: 'var(--neuro-base)',
+                boxShadow: 'var(--neuro-inset)',
+              }}
+            >
+              <Fingerprint className="w-5 h-5" />
+            </div>
+            <h2 className="text-base font-bold text-[var(--neuro-text-primary)]">
+              InsForge Native Auth
+            </h2>
+            <p className="text-xs text-[var(--neuro-text-muted)] leading-relaxed">
+              Email & password registration, real-time validation, password strength
+              meter, Google SSO, and password reset flows.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

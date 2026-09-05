@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing · Antigravity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #f8fafc;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── Minimal nav ──────────────────────────────────────────────────── */
+    nav.site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 5vw, 48px);
+      height: 64px;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .nav-brand {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      transition: color 0.18s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #f8fafc; }
+
+    /* ─── Design tokens ────────────────────────────────────────────────── */
+    :root {
+      --pricing-font: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      --pricing-bg: #0a0a0a;
+      --pricing-surface: rgba(255, 255, 255, 0.035);
+      --pricing-surface-hover: rgba(255, 255, 255, 0.06);
+      --pricing-border: rgba(255, 255, 255, 0.08);
+      --pricing-border-popular: rgba(59, 130, 246, 0.45);
+      --pricing-text-primary: #f8fafc;
+      --pricing-text-secondary: #94a3b8;
+      --pricing-text-muted: #475569;
+      --pricing-accent-blue: #3b82f6;
+      --pricing-accent-blue-glow: rgba(59, 130, 246, 0.22);
+      --pricing-accent-green: #34d399;
+      --pricing-accent-purple: #8b5cf6;
+      --pricing-popular-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --pricing-cta-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --pricing-radius: 18px;
+      --pricing-radius-sm: 10px;
+      --pricing-duration: 0.22s;
+      --pricing-ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --pricing-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ─── Section scaffold ─────────────────────────────────────────────── */
+    .pricing-section {
+      width: 100%;
+      padding: clamp(100px, 10vw, 140px) clamp(20px, 5vw, 48px) clamp(60px, 8vw, 100px);
+    }
+
+    /* ─── Section header ───────────────────────────────────────────────── */
+    .pricing-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      margin-bottom: clamp(52px, 6vw, 80px);
+    }
+    .pricing-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pricing-accent-blue);
+    }
+    .pricing-title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      color: var(--pricing-text-primary);
+    }
+    .pricing-subtitle {
+      font-size: clamp(15px, 1.6vw, 17px);
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--pricing-text-secondary);
+      max-width: 48ch;
+    }
+
+    /* ─── Billing toggle ───────────────────────────────────────────────── */
+    .pricing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      user-select: none;
+    }
+    .pricing-toggle-label {
+      all: unset;
+      font-family: var(--pricing-font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--pricing-text-secondary);
+      cursor: pointer;
+      transition: color var(--pricing-duration) var(--pricing-ease);
+    }
+    .pricing-toggle-label.is-active {
+      color: var(--pricing-text-primary);
+      font-weight: 500;
+    }
+    .pricing-toggle-track {
+      all: unset;
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--pricing-border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background var(--pricing-duration) var(--pricing-ease),
+                  border-color var(--pricing-duration) var(--pricing-ease),
+                  box-shadow var(--pricing-duration) var(--pricing-ease);
+    }
+    .pricing-toggle-track.is-annual {
+      background: var(--pricing-popular-gradient);
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--pricing-accent-blue-glow);
+    }
+    .pricing-toggle-thumb {
+      position: absolute;
+      top: 2px;
+      width: 18px;
+      height: 18px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,.35);
+      transition: left 0.25s var(--pricing-ease-bounce);
+    }
+    .pricing-toggle-thumb.monthly { left: 2px; }
+    .pricing-toggle-thumb.annual  { left: 22px; }
+
+    .pricing-save-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--pricing-accent-green);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    /* ─── Pricing grid ─────────────────────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    @media (max-width: 1180px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
+      .nav-links { display: none; }
+    }
+
+    /* ─── Pricing card ─────────────────────────────────────────────────── */
+    .pricing-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--pricing-surface);
+      border: 1px solid var(--pricing-border);
+      border-radius: var(--pricing-radius);
+      padding: 28px 24px 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: background var(--pricing-duration) var(--pricing-ease),
+                  border-color var(--pricing-duration) var(--pricing-ease),
+                  box-shadow var(--pricing-duration) var(--pricing-ease),
+                  transform var(--pricing-duration) var(--pricing-ease);
+      overflow: hidden;
+      height: 100%;
+    }
+    .pricing-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--card-accent, transparent);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .pricing-card:hover {
+      background: var(--pricing-surface-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 56px rgba(0, 0, 0, 0.45);
+    }
+    .pricing-card--popular {
+      border-color: var(--pricing-border-popular);
+      background: rgba(59, 130, 246, 0.055);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.18),
+                  0 24px 64px rgba(59, 130, 246, 0.1);
+    }
+    .pricing-card--popular:hover {
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.32),
+                  0 28px 72px rgba(59, 130, 246, 0.18);
+    }
+    .pricing-card > * { position: relative; z-index: 1; }
+
+    /* Popular badge */
+    .pricing-popular-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 14px;
+      background: var(--pricing-popular-gradient);
+      border-radius: 0 0 10px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #fff;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    /* ─── Card sections ────────────────────────────────────────────────── */
+    .pricing-card-header { margin-bottom: 20px; }
+    .pricing-plan-name {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--pricing-text-primary);
+      margin: 0 0 6px;
+    }
+    .pricing-plan-tagline {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--pricing-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Price */
+    .pricing-price-block { margin-bottom: 20px; min-height: 62px; }
+    .pricing-price-row { display: flex; align-items: baseline; gap: 8px; }
+    .pricing-price-display {
+      font-size: clamp(32px, 3.8vw, 38px);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      color: var(--pricing-text-primary);
+      line-height: 1;
+      transition: opacity 0.18s var(--pricing-ease);
+    }
+    .pricing-price-display.price-updating {
+      animation: priceFlip 0.28s var(--pricing-ease) both;
+    }
+    @keyframes priceFlip {
+      0%   { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0);   }
+    }
+    .pricing-price-original {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--pricing-text-muted);
+      text-decoration: line-through;
+      line-height: 1;
+    }
+    .pricing-price-per {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--pricing-text-secondary);
+      margin: 6px 0 0;
+      line-height: 1.4;
+      min-height: 18px;
+    }
+
+    /* Divider */
+    .pricing-divider {
+      height: 1px;
+      background: var(--pricing-border);
+      margin-bottom: 20px;
+    }
+
+    /* Features */
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+    .pricing-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .pricing-feature-item.is-excluded { opacity: 0.36; }
+    .pricing-feature-text { color: var(--pricing-text-secondary); }
+    .pricing-feature-item.is-highlight .pricing-feature-text { color: var(--pricing-text-primary); }
+    .pricing-feature-icon {
+      flex-shrink: 0;
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .pricing-feature-item.is-included .pricing-feature-icon {
+      background: rgba(52, 211, 153, 0.12);
+      color: var(--pricing-accent-green);
+    }
+    .pricing-feature-item.is-excluded .pricing-feature-icon {
+      background: rgba(148, 163, 184, 0.06);
+      color: var(--pricing-text-muted);
+    }
+
+    /* CTA */
+    .pricing-cta { margin-top: auto; }
+    .pricing-cta-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: var(--pricing-radius-sm);
+      font-family: var(--pricing-font);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      transition: opacity var(--pricing-duration) var(--pricing-ease),
+                  transform var(--pricing-duration) var(--pricing-ease),
+                  box-shadow var(--pricing-duration) var(--pricing-ease);
+      -webkit-font-smoothing: antialiased;
+    }
+    .pricing-cta-btn:active { transform: scale(0.97); }
+    .pricing-cta-btn--ghost {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--pricing-text-primary);
+      border: 1px solid var(--pricing-border);
+    }
+    .pricing-cta-btn--ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .pricing-cta-btn--primary {
+      background: var(--pricing-cta-gradient);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.32);
+    }
+    .pricing-cta-btn--primary:hover {
+      opacity: 0.9;
+      box-shadow: 0 6px 24px rgba(59, 130, 246, 0.44);
+      transform: translateY(-1px);
+    }
+    .pricing-cta-btn--elevated {
+      background: rgba(139, 92, 246, 0.12);
+      color: rgba(196, 181, 253, 0.95);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .pricing-cta-btn--elevated:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+    .pricing-cta-btn:focus-visible {
+      outline: 2px solid var(--pricing-accent-blue);
+      outline-offset: 3px;
+    }
+
+    /* Footer note */
+    .pricing-footer-note {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--pricing-text-muted);
+      margin: clamp(44px, 5vw, 68px) auto 0;
+      max-width: 60ch;
+    }
+    .pricing-link {
+      color: var(--pricing-accent-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.18s;
+    }
+    .pricing-link:hover { opacity: 0.75; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pricing-card, .pricing-toggle-track, .pricing-toggle-thumb,
+      .pricing-cta-btn, .pricing-price-display { transition: none; }
+      .pricing-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Minimal nav ──────────────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <span class="nav-brand">Antigravity</span>
+    <ul class="nav-links">
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Assets</a></li>
+      <li><a href="#">Analytics</a></li>
+      <li><a href="#" class="active">Pricing</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── Pricing Section ─────────────────────────────────────────── -->
+  <section class="pricing-section" aria-labelledby="pricing-heading">
+
+    <!-- Header -->
+    <div class="pricing-header">
+      <p class="pricing-eyebrow">Pricing</p>
+      <h1 id="pricing-heading" class="pricing-title">Simple, transparent pricing</h1>
+      <p class="pricing-subtitle">
+        Choose the plan that works for you.<br>Upgrade or downgrade at any time.
+      </p>
+
+      <!-- Toggle -->
+      <div class="pricing-toggle-wrap" role="group" aria-label="Billing cycle">
+        <button type="button" class="pricing-toggle-label is-active" id="labelMonthly" aria-pressed="true">
+          Monthly
+        </button>
+        <button
+          type="button"
+          class="pricing-toggle-track"
+          id="billingToggle"
+          role="switch"
+          aria-checked="false"
+          aria-label="Switch to annual billing"
+        >
+          <span class="pricing-toggle-thumb monthly" id="toggleThumb"></span>
+        </button>
+        <button type="button" class="pricing-toggle-label" id="labelAnnual" aria-pressed="false">
+          Annual
+        </button>
+        <span class="pricing-save-badge" aria-live="polite">Save 25%</span>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="pricing-grid" role="list">
+
+      <!-- Free -->
+      <div role="listitem">
+        <article class="pricing-card" style="--card-accent: rgba(148,163,184,0.10)">
+          <header class="pricing-card-header">
+            <h2 class="pricing-plan-name">Free</h2>
+            <p class="pricing-plan-tagline">Start building with zero friction.</p>
+          </header>
+          <div class="pricing-price-block">
+            <div class="pricing-price-row">
+              <span class="pricing-price-display" data-monthly="$0" data-annual="$0">$0</span>
+            </div>
+            <p class="pricing-price-per" data-monthly="forever free" data-annual="forever free">forever free</p>
+          </div>
+          <div class="pricing-divider" aria-hidden="true"></div>
+          <ul class="pricing-features" role="list">
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">5 projects</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">1 GB storage</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Community support</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Basic analytics</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Advanced orchestration</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Custom domains</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Priority support</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Team seats</span>
+            </li>
+          </ul>
+          <div class="pricing-cta">
+            <button type="button" class="pricing-cta-btn pricing-cta-btn--ghost">Get started</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Pro (popular) -->
+      <div role="listitem">
+        <article class="pricing-card pricing-card--popular" style="--card-accent: rgba(59,130,246,0.12)">
+          <div class="pricing-popular-badge">Most popular</div>
+          <header class="pricing-card-header" style="padding-top: 12px;">
+            <h2 class="pricing-plan-name">Pro</h2>
+            <p class="pricing-plan-tagline">For individuals who move fast.</p>
+          </header>
+          <div class="pricing-price-block">
+            <div class="pricing-price-row">
+              <span class="pricing-price-display" data-monthly="$19" data-annual="$14">$19</span>
+              <span class="pricing-price-original" id="proOriginal" style="display:none;">$19</span>
+            </div>
+            <p class="pricing-price-per" data-monthly="per month" data-annual="per month, billed annually">per month</p>
+          </div>
+          <div class="pricing-divider" aria-hidden="true"></div>
+          <ul class="pricing-features" role="list">
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Unlimited projects</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">100 GB storage</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Priority email support</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Advanced analytics</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Advanced orchestration</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Custom domains</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Priority SLA support</span>
+            </li>
+            <li class="pricing-feature-item is-excluded">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 5L11 11M11 5L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span class="pricing-feature-text">Team seats</span>
+            </li>
+          </ul>
+          <div class="pricing-cta">
+            <button type="button" class="pricing-cta-btn pricing-cta-btn--primary">Start free trial</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Team -->
+      <div role="listitem">
+        <article class="pricing-card" style="--card-accent: rgba(139,92,246,0.10)">
+          <header class="pricing-card-header">
+            <h2 class="pricing-plan-name">Team</h2>
+            <p class="pricing-plan-tagline">Built for serious teams at scale.</p>
+          </header>
+          <div class="pricing-price-block">
+            <div class="pricing-price-row">
+              <span class="pricing-price-display" data-monthly="$49" data-annual="$37">$49</span>
+              <span class="pricing-price-original" id="teamOriginal" style="display:none;">$49</span>
+            </div>
+            <p class="pricing-price-per" data-monthly="per month" data-annual="per month, billed annually">per month</p>
+          </div>
+          <div class="pricing-divider" aria-hidden="true"></div>
+          <ul class="pricing-features" role="list">
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Unlimited projects</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">1 TB storage</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">24/7 priority support</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Advanced analytics</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Advanced orchestration</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Custom domains</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Priority SLA support</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Up to 25 team seats</span>
+            </li>
+          </ul>
+          <div class="pricing-cta">
+            <button type="button" class="pricing-cta-btn pricing-cta-btn--elevated">Start free trial</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Enterprise -->
+      <div role="listitem">
+        <article class="pricing-card" style="--card-accent: rgba(52,211,153,0.07)">
+          <header class="pricing-card-header">
+            <h2 class="pricing-plan-name">Enterprise</h2>
+            <p class="pricing-plan-tagline">Custom scale. Dedicated infrastructure.</p>
+          </header>
+          <div class="pricing-price-block">
+            <div class="pricing-price-row">
+              <span class="pricing-price-display" data-monthly="Custom" data-annual="Custom">Custom</span>
+            </div>
+            <p class="pricing-price-per" data-monthly="tailored to your needs" data-annual="tailored to your needs">tailored to your needs</p>
+          </div>
+          <div class="pricing-divider" aria-hidden="true"></div>
+          <ul class="pricing-features" role="list">
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Unlimited everything</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Dedicated storage</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Dedicated support team</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Custom analytics &amp; reporting</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Enterprise orchestration</span>
+            </li>
+            <li class="pricing-feature-item is-included">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Custom domains + CDN</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">99.99% SLA guarantee</span>
+            </li>
+            <li class="pricing-feature-item is-included is-highlight">
+              <span class="pricing-feature-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8L6.5 11L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pricing-feature-text">Unlimited team seats</span>
+            </li>
+          </ul>
+          <div class="pricing-cta">
+            <button type="button" class="pricing-cta-btn pricing-cta-btn--ghost">Contact sales</button>
+          </div>
+        </article>
+      </div>
+
+    </div><!-- /pricing-grid -->
+
+    <p class="pricing-footer-note">
+      All plans include a&nbsp;14-day free trial. No credit card required.&nbsp;
+      <a href="#" class="pricing-link">Compare all features →</a>
+    </p>
+
+  </section>
+
+  <script>
+    /* ── Billing toggle logic ─────────────────────────────────────── */
+    const toggle = document.getElementById('billingToggle');
+    const thumb  = document.getElementById('toggleThumb');
+    const lbMonthly = document.getElementById('labelMonthly');
+    const lbAnnual  = document.getElementById('labelAnnual');
+
+    let isAnnual = false;
+
+    const priceDisplays = document.querySelectorAll('.pricing-price-display');
+    const pricePerEls   = document.querySelectorAll('.pricing-price-per');
+    const proOriginal   = document.getElementById('proOriginal');
+    const teamOriginal  = document.getElementById('teamOriginal');
+
+    function applyBilling() {
+      const mode = isAnnual ? 'annual' : 'monthly';
+
+      toggle.classList.toggle('is-annual', isAnnual);
+      toggle.setAttribute('aria-checked', String(isAnnual));
+
+      thumb.className = 'pricing-toggle-thumb ' + (isAnnual ? 'annual' : 'monthly');
+
+      lbMonthly.classList.toggle('is-active', !isAnnual);
+      lbAnnual.classList.toggle('is-active',   isAnnual);
+      lbMonthly.setAttribute('aria-pressed', String(!isAnnual));
+      lbAnnual.setAttribute('aria-pressed',  String(isAnnual));
+
+      priceDisplays.forEach(el => {
+        const newVal = el.dataset[mode];
+        if (el.textContent !== newVal) {
+          el.classList.remove('price-updating');
+          void el.offsetWidth; // reflow
+          el.textContent = newVal;
+          el.classList.add('price-updating');
+        }
+      });
+
+      pricePerEls.forEach(el => { el.textContent = el.dataset[mode]; });
+
+      if (proOriginal) {
+        proOriginal.style.display = isAnnual ? 'inline' : 'none';
+        if (isAnnual) proOriginal.textContent = '$19';
+      }
+      if (teamOriginal) {
+        teamOriginal.style.display = isAnnual ? 'inline' : 'none';
+        if (isAnnual) teamOriginal.textContent = '$49';
+      }
+    }
+
+    function switchBilling() { isAnnual = !isAnnual; applyBilling(); }
+
+    toggle.addEventListener('click', switchBilling);
+    lbMonthly.addEventListener('click', () => { if (isAnnual)  switchBilling(); });
+    lbAnnual.addEventListener('click',  () => { if (!isAnnual) switchBilling(); });
+    toggle.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); switchBilling(); }
+    });
+  </script>
+
+</body>
+</html>

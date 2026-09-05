@@ -1,0 +1,533 @@
+/*
+ * PricingSection.css
+ * Design direction: Google-grade dark luxury minimal
+ * Font: DM Sans (closest free Google Fonts match to Google Product Sans)
+ * Aesthetic: Precision-spaced, card-based, animated toggle — functional confidence
+ */
+
+/* ─── Font import ─────────────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap");
+
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
+.pricing-section {
+  /* typography */
+  --pricing-font: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* palette */
+  --pricing-bg: #0a0a0a;
+  --pricing-surface: rgba(255, 255, 255, 0.04);
+  --pricing-surface-hover: rgba(255, 255, 255, 0.06);
+  --pricing-border: rgba(255, 255, 255, 0.08);
+  --pricing-border-popular: rgba(59, 130, 246, 0.5);
+
+  --pricing-text-primary: #f8fafc;
+  --pricing-text-secondary: #94a3b8;
+  --pricing-text-muted: #475569;
+  --pricing-text-disabled: #334155;
+
+  --pricing-accent-blue: #3b82f6;
+  --pricing-accent-blue-glow: rgba(59, 130, 246, 0.25);
+  --pricing-accent-purple: #8b5cf6;
+  --pricing-accent-green: #34d399;
+
+  --pricing-popular-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --pricing-cta-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+
+  /* spacing */
+  --pricing-radius: 16px;
+  --pricing-radius-sm: 10px;
+
+  /* motion */
+  --pricing-duration: 0.22s;
+  --pricing-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --pricing-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Section scaffold ───────────────────────────────────────────────────── */
+.pricing-section {
+  font-family: var(--pricing-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  padding: clamp(64px, 8vw, 120px) clamp(20px, 5vw, 48px);
+  color: var(--pricing-text-primary);
+}
+
+/* ─── Section header ─────────────────────────────────────────────────────── */
+.pricing-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+.pricing-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pricing-accent-blue);
+  margin: 0;
+}
+
+.pricing-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin: 0;
+  color: var(--pricing-text-primary);
+}
+
+.pricing-subtitle {
+  font-size: clamp(15px, 1.6vw, 17px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--pricing-text-secondary);
+  max-width: 48ch;
+  margin: 0;
+}
+
+/* ─── Billing toggle ─────────────────────────────────────────────────────── */
+.pricing-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  user-select: none;
+}
+
+.pricing-toggle-label {
+  all: unset;
+  font-family: var(--pricing-font);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--pricing-text-secondary);
+  cursor: pointer;
+  transition: color var(--pricing-duration) var(--pricing-ease);
+  outline: none;
+}
+
+.pricing-toggle-label:focus-visible {
+  outline: 2px solid var(--pricing-accent-blue);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.pricing-toggle-label.is-active {
+  color: var(--pricing-text-primary);
+  font-weight: 500;
+}
+
+/* Pill track */
+.pricing-toggle-track {
+  all: unset;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--pricing-border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background var(--pricing-duration) var(--pricing-ease),
+    border-color var(--pricing-duration) var(--pricing-ease),
+    box-shadow var(--pricing-duration) var(--pricing-ease);
+  flex-shrink: 0;
+}
+
+.pricing-toggle-track[aria-checked="true"] {
+  background: var(--pricing-cta-gradient);
+  border-color: transparent;
+  box-shadow: 0 0 0 3px var(--pricing-accent-blue-glow);
+}
+
+.pricing-toggle-track:focus-visible {
+  outline: 2px solid var(--pricing-accent-blue);
+  outline-offset: 3px;
+}
+
+/* Thumb */
+.pricing-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s var(--pricing-ease-bounce);
+  will-change: transform;
+}
+
+/* Save badge */
+.pricing-save-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pricing-accent-green);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* ─── Pricing grid ───────────────────────────────────────────────────────── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1260px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1180px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ─── Pricing card ───────────────────────────────────────────────────────── */
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--pricing-surface);
+  border: 1px solid var(--pricing-border);
+  border-radius: var(--pricing-radius);
+  padding: 28px 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    background var(--pricing-duration) var(--pricing-ease),
+    border-color var(--pricing-duration) var(--pricing-ease),
+    box-shadow var(--pricing-duration) var(--pricing-ease),
+    transform var(--pricing-duration) var(--pricing-ease);
+  will-change: transform;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Card background accent blob */
+.pricing-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--card-accent, transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity var(--pricing-duration) var(--pricing-ease);
+}
+
+.pricing-card:hover {
+  background: var(--pricing-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Popular card */
+.pricing-card--popular {
+  border-color: var(--pricing-border-popular);
+  background: rgba(59, 130, 246, 0.06);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.2),
+    0 24px 64px rgba(59, 130, 246, 0.12);
+}
+
+.pricing-card--popular:hover {
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.35),
+    0 28px 72px rgba(59, 130, 246, 0.18);
+}
+
+/* All card children above the pseudo */
+.pricing-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Popular badge (top pill) */
+.pricing-popular-badge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  background: var(--pricing-popular-gradient);
+  border-radius: 0 0 10px 10px;
+  font-family: var(--pricing-font);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #fff;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+/* ─── Card header ────────────────────────────────────────────────────────── */
+.pricing-card-header {
+  margin-bottom: 20px;
+}
+
+.pricing-plan-name {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pricing-text-primary);
+  margin: 0 0 6px;
+}
+
+.pricing-plan-tagline {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--pricing-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ─── Price block ────────────────────────────────────────────────────────── */
+.pricing-price-block {
+  margin-bottom: 20px;
+  min-height: 62px;
+}
+
+.pricing-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pricing-price-display {
+  font-size: clamp(32px, 4vw, 38px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--pricing-text-primary);
+  line-height: 1;
+  transition: opacity 0.18s var(--pricing-ease), transform 0.22s var(--pricing-ease-bounce);
+}
+
+.pricing-price-original {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--pricing-text-muted);
+  text-decoration: line-through;
+  line-height: 1;
+}
+
+.pricing-price-per {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--pricing-text-secondary);
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
+/* ─── Divider ────────────────────────────────────────────────────────────── */
+.pricing-divider {
+  height: 1px;
+  background: var(--pricing-border);
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+/* ─── Features list ──────────────────────────────────────────────────────── */
+.pricing-features {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: 1;
+}
+
+.pricing-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.pricing-feature-item.is-excluded {
+  opacity: 0.38;
+}
+
+.pricing-feature-item.is-highlight .pricing-feature-text {
+  color: var(--pricing-text-primary);
+}
+
+.pricing-feature-text {
+  color: var(--pricing-text-secondary);
+  font-size: 13.5px;
+}
+
+.pricing-feature-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.pricing-feature-item.is-included .pricing-feature-icon {
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--pricing-accent-green);
+}
+
+.pricing-feature-item.is-excluded .pricing-feature-icon {
+  background: rgba(148, 163, 184, 0.06);
+  color: var(--pricing-text-muted);
+}
+
+/* ─── CTA button ─────────────────────────────────────────────────────────── */
+.pricing-cta {
+  margin-top: auto;
+}
+
+.pricing-cta-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: var(--pricing-radius-sm);
+  font-family: var(--pricing-font);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  transition:
+    opacity var(--pricing-duration) var(--pricing-ease),
+    transform var(--pricing-duration) var(--pricing-ease),
+    box-shadow var(--pricing-duration) var(--pricing-ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+.pricing-cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* Ghost */
+.pricing-cta-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--pricing-text-primary);
+  border: 1px solid var(--pricing-border);
+}
+
+.pricing-cta-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Primary — blue-to-purple gradient */
+.pricing-cta-btn--primary {
+  background: var(--pricing-cta-gradient);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.32);
+}
+
+.pricing-cta-btn--primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.44);
+  transform: translateY(-1px);
+}
+
+/* Elevated — slightly more prominent than ghost */
+.pricing-cta-btn--elevated {
+  background: rgba(139, 92, 246, 0.12);
+  color: rgba(196, 181, 253, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.pricing-cta-btn--elevated:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Focus styles for all buttons */
+.pricing-cta-btn:focus-visible {
+  outline: 2px solid var(--pricing-accent-blue);
+  outline-offset: 3px;
+}
+
+/* ─── Footer note ────────────────────────────────────────────────────────── */
+.pricing-footer-note {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--pricing-text-muted);
+  margin: clamp(40px, 5vw, 64px) auto 0;
+  max-width: 60ch;
+}
+
+.pricing-link {
+  color: var(--pricing-accent-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity var(--pricing-duration) var(--pricing-ease);
+}
+
+.pricing-link:hover {
+  opacity: 0.8;
+}
+
+/* ─── Price update animation ─────────────────────────────────────────────── */
+/* Triggered via JS class toggle — the price number fades/scales subtly on switch */
+@keyframes pricing-price-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pricing-price-display {
+  animation: pricing-price-in 0.28s var(--pricing-ease) both;
+}
+
+.pricing-price-original {
+  animation: pricing-price-in 0.28s var(--pricing-ease) 0.04s both;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pricing-card,
+  .pricing-toggle-track,
+  .pricing-toggle-thumb,
+  .pricing-cta-btn {
+    transition: none;
+  }
+
+  .pricing-price-display,
+  .pricing-price-original {
+    animation: none;
+  }
+
+  .pricing-card:hover {
+    transform: none;
+  }
+}
