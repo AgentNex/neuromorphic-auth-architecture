@@ -11,12 +11,14 @@ import TactileButton from '../ui/TactileButton';
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
   onSwitchToForgotPassword: () => void;
+  onSwitchToVerify?: (email: string) => void;
   onSuccess?: (user: any) => void;
 }
 
 export default function SignInForm({
   onSwitchToSignUp,
   onSwitchToForgotPassword,
+  onSwitchToVerify,
   onSuccess,
 }: SignInFormProps) {
   const [email, setEmail] = useState('');
@@ -260,16 +262,29 @@ export default function SignInForm({
       />
 
       {/* Footer Switcher */}
-      <p className="text-center text-xs text-[var(--neuro-text-muted)] pt-2">
-        Don&apos;t have an account?{' '}
-        <button
-          type="button"
-          onClick={onSwitchToSignUp}
-          className="font-semibold text-[#6ea0f7] hover:underline outline-none focus:underline"
-        >
-          Create account
-        </button>
-      </p>
+      <div className="text-center text-xs text-[var(--neuro-text-muted)] pt-2 space-y-1">
+        <p>
+          Don&apos;t have an account?{' '}
+          <button
+            type="button"
+            onClick={onSwitchToSignUp}
+            className="font-semibold text-[#6ea0f7] hover:underline outline-none focus:underline"
+          >
+            Create account
+          </button>
+        </p>
+        {onSwitchToVerify && (
+          <p>
+            <button
+              type="button"
+              onClick={() => onSwitchToVerify(email)}
+              className="text-[11px] font-medium text-[var(--neuro-text-muted)] hover:text-[#6ea0f7] transition-colors"
+            >
+              Have a 6-digit verification code? Enter it here
+            </button>
+          </p>
+        )}
+      </div>
     </form>
   );
 }

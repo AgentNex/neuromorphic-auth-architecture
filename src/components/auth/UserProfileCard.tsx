@@ -8,9 +8,14 @@ import TactileButton from '../ui/TactileButton';
 interface UserProfileCardProps {
   user: any;
   onSignOut: () => void;
+  onEnterVerificationCode?: (email: string) => void;
 }
 
-export default function UserProfileCard({ user, onSignOut }: UserProfileCardProps) {
+export default function UserProfileCard({
+  user,
+  onSignOut,
+  onEnterVerificationCode,
+}: UserProfileCardProps) {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
@@ -143,17 +148,37 @@ export default function UserProfileCard({ user, onSignOut }: UserProfileCardProp
 
       {/* Verification prompt if pending */}
       {!isVerified && (
-        <div className="space-y-1 text-center">
-          <button
-            type="button"
-            disabled={resending}
-            onClick={handleResendVerification}
-            className="text-xs font-medium text-[#6ea0f7] hover:underline"
-          >
-            {resending ? 'Sending email...' : 'Resend verification email'}
-          </button>
+        <div
+          className="space-y-2 text-center p-3 rounded-2xl"
+          style={{
+            backgroundColor: 'var(--neuro-base)',
+            boxShadow: 'var(--neuro-inset)',
+          }}
+        >
+          <p className="text-[11px] text-[var(--neuro-text-muted)]">
+            Account activation pending email verification
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+            {onEnterVerificationCode && (
+              <button
+                type="button"
+                onClick={() => onEnterVerificationCode(email)}
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white neuro-pill-primary transition-transform active:scale-95"
+              >
+                Enter 6-Digit Code
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={resending}
+              onClick={handleResendVerification}
+              className="text-xs font-medium text-[#6ea0f7] hover:underline"
+            >
+              {resending ? 'Sending...' : 'Resend code'}
+            </button>
+          </div>
           {resendStatus && (
-            <p className="text-[11px] text-[var(--neuro-text-muted)]">{resendStatus}</p>
+            <p className="text-[11px] text-[#10b981] pt-1">{resendStatus}</p>
           )}
         </div>
       )}

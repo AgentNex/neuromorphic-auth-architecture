@@ -18,11 +18,13 @@ import TactileButton from '../ui/TactileButton';
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
   onSuccess?: (user: any) => void;
+  onRequireVerification?: (email: string) => void;
 }
 
 export default function SignUpForm({
   onSwitchToSignIn,
   onSuccess,
+  onRequireVerification,
 }: SignUpFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -131,9 +133,15 @@ export default function SignUpForm({
       if (data?.requireEmailVerification) {
         setSuccessInfo({
           message:
-            'Account created! We sent a verification link to your email address. Please verify to continue.',
+            'Account created! A 6-digit code has been sent to your email. Redirecting to verification...',
           requireVerification: true,
         });
+
+        setTimeout(() => {
+          if (onRequireVerification) {
+            onRequireVerification(email.trim());
+          }
+        }, 800);
       } else {
         setSuccessInfo({
           message: 'Account created successfully! Logging you in...',
@@ -190,9 +198,20 @@ export default function SignUpForm({
             <span className="font-semibold">{successInfo.message}</span>
           </div>
           {successInfo.requireVerification && (
-            <p className="text-[var(--neuro-text-muted)] text-[11px] pl-6">
-              Check your inbox (and spam folder). Once verified, you can sign in directly.
-            </p>
+            <div className="pl-6 space-y-1">
+              <p className="text-[var(--neuro-text-muted)] text-[11px]">
+                Please enter the 6-digit code from your email to activate your account.
+              </p>
+              {onRequireVerification && (
+                <button
+                  type="button"
+                  onClick={() => onRequireVerification(email.trim())}
+                  className="text-xs font-bold text-[#6ea0f7] hover:underline block pt-0.5"
+                >
+                  Enter 6-digit code now →
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

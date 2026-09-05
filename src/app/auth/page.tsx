@@ -8,14 +8,16 @@ import { insforge } from '@/lib/insforge';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
 import ForgotPassword from '@/components/auth/ForgotPassword';
+import VerifyEmailForm from '@/components/auth/VerifyEmailForm';
 import UserProfileCard from '@/components/auth/UserProfileCard';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 
-type AuthView = 'signin' | 'signup' | 'forgot' | 'profile';
+type AuthView = 'signin' | 'signup' | 'forgot' | 'profile' | 'verify';
 
 function AuthContent() {
   const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<AuthView>('signin');
+  const [verificationEmail, setVerificationEmail] = useState('');
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -28,10 +30,16 @@ function AuthContent() {
   // Handle URL query parameters and check existing session
   useEffect(() => {
     const tabParam = searchParams.get('tab');
+    const emailParam = searchParams.get('email');
+    if (emailParam) {
+      setVerificationEmail(emailParam);
+    }
     if (tabParam === 'signup') {
       setCurrentView('signup');
     } else if (tabParam === 'forgot') {
       setCurrentView('forgot');
+    } else if (tabParam === 'verify') {
+      setCurrentView('verify');
     }
 
     // Check if user is already signed in
@@ -242,6 +250,10 @@ function AuthContent() {
             <SignInForm
               onSwitchToSignUp={() => transitionTo('signup', 'right')}
               onSwitchToForgotPassword={() => transitionTo('forgot', 'right')}
+              onSwitchToVerify={(email) => {
+                if (email) setVerificationEmail(email);
+                transitionTo('verify', 'right');
+              }}
               onSuccess={(user) => {
                 setCurrentUser(user);
                 transitionTo('profile', 'right');
@@ -252,10 +264,26 @@ function AuthContent() {
           {currentView === 'signup' && (
             <SignUpForm
               onSwitchToSignIn={() => transitionTo('signin', 'left')}
+              onRequireVerification={(email) => {
+                setVerificationEmail(email);
+                transitionTo('verify', 'right');
+              }}
               onSuccess={(user) => {
                 setCurrentUser(user);
                 transitionTo('profile', 'right');
               }}
+            />
+          )}
+
+          {currentView === 'verify' && (
+            <VerifyEmailForm
+              email={verificationEmail}
+              onSuccess={(user) => {
+                if (user) setCurrentUser(user);
+                transitionTo('profile', 'right');
+              }}
+              onBackToSignUp={() => transitionTo('signup', 'left')}
+              onBackToSignIn={() => transitionTo('signin', 'left')}
             />
           )}
 
@@ -268,6 +296,10 @@ function AuthContent() {
           {currentView === 'profile' && (
             <UserProfileCard
               user={currentUser}
+              onEnterVerificationCode={(email) => {
+                setVerificationEmail(email);
+                transitionTo('verify', 'right');
+              }}
               onSignOut={() => {
                 setCurrentUser(null);
                 transitionTo('signin', 'left');
